@@ -1,0 +1,3 @@
+rootProject.name='LightweightMVC'
+include ':app'
+include ':lightweightmvc'
