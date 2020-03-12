@@ -1,10 +1,18 @@
 package com.yzk.lightweightmvc;
 
+import android.app.Dialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
@@ -29,21 +37,52 @@ public abstract class BaseView<T extends BaseController> {
 
     public abstract int setContentLayout();
 
-    public int setLeftButtonIcon() {
-
-        return 0;
+    public void showLoading(String message) {
+        LoadingConfigMode.showLoading(message, mController);
     }
 
-    public void showLoading(String s) {
+    Disposable closeTimer;
 
+    public void showLoadingWithTimeOut(String message, int second) {
+        Dialog dialog = LoadingConfigMode.showLoading(message, mController);
+        Observable.timer(second, TimeUnit.SECONDS)
+                .compose(mController.bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Long>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        closeTimer = d;
+                    }
+
+                    @Override
+                    public void onNext(Long value) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        if (dialog.isShowing()) {
+                            hideLoding();
+                        }
+                    }
+                });
+        dialog.setOnDismissListener((dialogInterface) -> {
+            if (closeTimer != null) {
+                closeTimer.dispose();
+                closeTimer = null;
+            }
+            dialog.setOnDismissListener(null);
+        });
     }
 
     public void hideLoding() {
-
-    }
-
-    public void showLoading() {
-        showLoading("加载中,请稍后");
+        LoadingConfigMode.hideLoding(mController);
     }
 
     public View setContentLayout(LayoutInflater layoutInflater) {
@@ -83,11 +122,7 @@ public abstract class BaseView<T extends BaseController> {
         if (bind != null) {
             bind.unbind();
         }
-        hideLoding();
-    }
-
-    public BaseView() {
-
+        LoadingConfigMode.releaseCreateDialog(mController);
     }
 
     public boolean isResume() {
@@ -107,5 +142,21 @@ public abstract class BaseView<T extends BaseController> {
         if (null != v && null != imm) {
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BaseView<?> baseView = (BaseView<?>) o;
+        return Objects.equals(mController, baseView.mController) &&
+                Objects.equals(rootView, baseView.rootView) &&
+                Objects.equals(bind, baseView.bind);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mController, rootView, bind);
     }
 }

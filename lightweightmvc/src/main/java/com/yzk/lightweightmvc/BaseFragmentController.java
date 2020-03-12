@@ -27,14 +27,16 @@ public abstract class BaseFragmentController<P extends BaseFragmentView> extends
 
     protected P view;
 
-    protected View fragmentView;
-
-    protected Context mContext;
+    /**
+     * 摒弃此类写法,因为有了更好或者说,更合理的解决方案
+     * @param activity
+     */
+//    protected Context mContext;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mContext = activity;
+//        mContext = activity;
         this.lifecycleSubject.onNext(FragmentEvent.ATTACH);
     }
 
@@ -48,7 +50,9 @@ public abstract class BaseFragmentController<P extends BaseFragmentView> extends
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        if (null == fragmentView) {
+        if (this.view!=null){
+            return view.onCreateView(inflater,container,savedInstanceState);
+        }else{
             try {
                 this.view = getMvcView();
             } catch (java.lang.InstantiationException e) {
@@ -56,16 +60,12 @@ public abstract class BaseFragmentController<P extends BaseFragmentView> extends
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-            if (this.view == null) {
+            if (this.view!=null){
+                return view.onCreateView(inflater,container,savedInstanceState);
+            }else{
                 return null;
             }
-            fragmentView = this.view.setContentLayout(inflater, container);
-            view.setFragmentView(this, mContext, fragmentView);
-            initData();
-        } else {
-            container.removeView(fragmentView);
         }
-        return fragmentView;
     }
 
     protected abstract void initData();
