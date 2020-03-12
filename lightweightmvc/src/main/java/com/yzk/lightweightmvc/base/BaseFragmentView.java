@@ -1,4 +1,4 @@
-package com.yzk.lightweightmvc;
+package com.yzk.lightweightmvc.base;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -7,6 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
+
+import com.yzk.lightweightmvc.config.LoadingConfigMode;
+import com.yzk.lightweightmvc.utils.MessageUtils;
+import com.yzk.lightweightmvc.config.ToolbarConfigMode;
+
 import java.util.concurrent.TimeUnit;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;

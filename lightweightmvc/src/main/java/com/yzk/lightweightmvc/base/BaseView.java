@@ -1,9 +1,13 @@
-package com.yzk.lightweightmvc;
+package com.yzk.lightweightmvc.base;
 
 import android.app.Dialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+
+import com.yzk.lightweightmvc.config.LoadingConfigMode;
+import com.yzk.lightweightmvc.utils.MessageUtils;
+
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import butterknife.ButterKnife;

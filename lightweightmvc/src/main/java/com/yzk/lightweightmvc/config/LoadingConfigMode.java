@@ -1,8 +1,11 @@
-package com.yzk.lightweightmvc;
+package com.yzk.lightweightmvc.config;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.util.ArrayMap;
+
+import com.yzk.lightweightmvc.base.BaseController;
+
 import timber.log.Timber;
 
 /***

@@ -1,4 +1,4 @@
-package com.yzk.lightweightmvc;
+package com.yzk.lightweightmvc.base;
 
 import android.os.Bundle;
 import android.view.View;

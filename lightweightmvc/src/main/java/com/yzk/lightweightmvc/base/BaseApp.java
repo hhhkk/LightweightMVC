@@ -1,4 +1,4 @@
-package com.yzk.lightweightmvc;
+package com.yzk.lightweightmvc.base;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -7,13 +7,10 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import io.reactivex.plugins.RxJavaPlugins;
 import timber.log.Timber;
 
@@ -38,7 +35,6 @@ public class BaseApp extends Application implements Application.ActivityLifecycl
         super.onCreate();
         application = this;
         if (!isMainProcess()) {
-            Timber.e("onCreate return");
             return;
         }
         initLog();

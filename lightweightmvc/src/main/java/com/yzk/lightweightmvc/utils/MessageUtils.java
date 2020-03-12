@@ -1,8 +1,10 @@
-package com.yzk.lightweightmvc;
+package com.yzk.lightweightmvc.utils;
 
 import android.app.Activity;
 import android.widget.Toast;
 import com.tapadoo.alerter.Alerter;
+import com.yzk.lightweightmvc.base.BaseApp;
+
 import java.util.List;
 
 /***
@@ -25,9 +27,7 @@ public class MessageUtils {
                 return;
             }
         }
-
     }
-
 
     public static void showToastShort(String message) {
         List<Activity> activities = BaseApp.getActivities();

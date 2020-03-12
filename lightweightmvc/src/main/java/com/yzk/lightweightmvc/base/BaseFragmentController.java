@@ -1,7 +1,6 @@
-package com.yzk.lightweightmvc;
+package com.yzk.lightweightmvc.base;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
