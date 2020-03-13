@@ -1,6 +1,7 @@
 package com.yzk.lightweightmvc.config;
 
 
+import android.app.Activity;
 import android.view.View;
 
 /**
@@ -14,14 +15,14 @@ public class ActivityConfigMode {
         ActivityConfigMode.defaultToolBarSetting = defaultToolBarSetting;
     }
 
-    public static void configToolbar(View fragmentView) {
+    public static void configToolbar(View fragmentView,Activity activity) {
         if (fragmentView != null && defaultToolBarSetting != null) {
-            defaultToolBarSetting.configToolbar(fragmentView);
+            defaultToolBarSetting.configToolbar(fragmentView,activity);
         }
     }
 
     public interface DefaultToolBarSetting {
-        void configToolbar(View view);
+        void configToolbar(View view, Activity activity);
     }
 
 

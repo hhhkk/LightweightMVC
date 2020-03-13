@@ -3,8 +3,11 @@ package com.yzk.lightweightmvc.utils;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+
 import com.yzk.lightweightmvc.base.SuperApp;
+
 import java.util.List;
+
 import timber.log.Timber;
 
 public class ProcessUtils {
@@ -29,6 +32,10 @@ public class ProcessUtils {
             temp.finish();
         }
         activities.clear();
+    }
+
+    public static void KillMeAndrCloseJVm() {
+        KillMe();
         System.exit(0);
     }
 }

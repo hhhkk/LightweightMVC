@@ -2,12 +2,16 @@ package com.yzk.lightweightmvc.network;
 
 import android.net.Uri;
 import android.text.TextUtils;
+
 import com.yzk.lightweightmvc.config.HttpClientConfigMode;
+
 import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
 import okhttp3.CookieJar;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
@@ -38,8 +42,20 @@ public class HttpClient implements Interceptor {
 
     private static Retrofit retrofit;
 
-    public HttpClient() {
+    static String REQUEST_PARMS_TAG = "Request Parms :";
 
+    static String REQUEST_PATH_TAG = "Request Path :";
+
+    static String REQUEST_HEADERS_TAG = "Request Header :";
+
+    static String REQUEST_METHOD_TAG = "Request method :";
+
+    static String RESPONSE_BODY_TAG = "ResponseBody";
+
+    public static String MULTIPART = MediaType.get("multipart/form-data").type();
+
+
+    public HttpClient() {
     }
 
     public static <T> T createRetrofitApi(final Class<T> service) {
@@ -54,28 +70,11 @@ public class HttpClient implements Interceptor {
         return retrofit.create(service);
     }
 
-    public static Retrofit getHttpClient() {
-        if (retrofit == null) {
-            try {
-                retrofit = httpClient.retrofit();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return retrofit;
-    }
-
-
     private synchronized Retrofit retrofit() {
         OkHttpClient defaultOkHttpClient = HttpClientConfigMode.getOkHttpClient();
         OkHttpClient defaultClient;
-        if (defaultOkHttpClient == null) {
+        if (defaultOkHttpClient != null) {
             defaultClient = defaultOkHttpClient;
-            ArrayList<Interceptor> interceptors = new ArrayList<>();
-            interceptors.addAll(defaultClient.interceptors());
-            defaultClient.interceptors().clear();
-            defaultClient.interceptors().add(this);
-            defaultClient.interceptors().addAll(interceptors);
         } else {
             defaultClient = getDefaultClient();
         }
@@ -135,19 +134,12 @@ public class HttpClient implements Interceptor {
         return response;
     }
 
-    String REQUEST_PARMS_TAG = "Request Parms :";
-    String REQUEST_PATH_TAG = "Request Path :";
-    String REQUEST_HEADERS_TAG = "Request Header :";
-    String REQUEST_METHOD_TAG = "Request method :";
-    String RESPONSE_BODY_TAG = "ResponseBody";
-    String MULTIPART = MediaType.get("multipart").type();
-
     /***
      * 打印请求头
      * @param request
      * @param stringBuffer
      */
-    private void printlnRequest(Request request, StringBuffer stringBuffer) {
+    public static void printlnRequest(Request request, StringBuffer stringBuffer) {
         RequestBody body = request.body();
         MediaType mediaType = body.contentType();
         String type = mediaType.type();
@@ -191,7 +183,7 @@ public class HttpClient implements Interceptor {
         stringBuffer.delete(0, stringBuffer.length());
     }
 
-    private void printlnResponse(Response response, StringBuffer stringBuffer) {
+    public static void printlnResponse(Response response, StringBuffer stringBuffer) {
         ResponseBody body = response.body();
         MediaType mediaType = body.contentType();
         if (mediaType.equals(MULTIPART)) {

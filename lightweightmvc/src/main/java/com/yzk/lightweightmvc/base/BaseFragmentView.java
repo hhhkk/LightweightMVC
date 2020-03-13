@@ -1,7 +1,6 @@
 package com.yzk.lightweightmvc.base;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,14 +9,13 @@ import android.view.ViewTreeObserver;
 
 import androidx.annotation.Nullable;
 
+import com.yzk.lightweightmvc.config.ButterknifeConfigMode;
 import com.yzk.lightweightmvc.config.LoadingConfigMode;
 import com.yzk.lightweightmvc.utils.MessageUtils;
 import com.yzk.lightweightmvc.config.ActivityConfigMode;
 
 import java.util.concurrent.TimeUnit;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -29,18 +27,7 @@ public abstract class BaseFragmentView<T extends BaseFragmentController> {
 
     protected T mController;
 
-    private Unbinder bind;
-
-    protected Context mContext;
-
     protected View fragmentView;
-
-    public void setFragmentView(T controller, Context context, View view) {
-        bind = ButterKnife.bind(this, view);
-        mContext = context;
-        mController = controller;
-        initView();
-    }
 
     protected abstract View setContentLayout(LayoutInflater inflater, @Nullable ViewGroup container);
 
@@ -59,8 +46,7 @@ public abstract class BaseFragmentView<T extends BaseFragmentController> {
     }
 
     public void destroyView() {
-        bind.unbind();
-        mContext = null;
+        ButterknifeConfigMode.unbindView(this);
         LoadingConfigMode.releaseCreateDialog(mController.getActivity());
     }
 
@@ -136,13 +122,10 @@ public abstract class BaseFragmentView<T extends BaseFragmentController> {
         LoadingConfigMode.hideLoding(mController.getActivity());
     }
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState, T controller) {
         if (fragmentView == null) {
             fragmentView = this.setContentLayout(inflater, container);
-            if (isConfigToolbar()) {
-                ActivityConfigMode.configToolbar(fragmentView);
-            }
-            delayInit();
+            delayInit(controller);
             return fragmentView;
         } else {
             container.removeView(fragmentView);
@@ -150,12 +133,18 @@ public abstract class BaseFragmentView<T extends BaseFragmentController> {
         }
     }
 
-    private void delayInit() {
+
+    private void delayInit(final T controller) {
+        this.mController = controller;
         fragmentView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 fragmentView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                setFragmentView(mController, mContext, fragmentView);
+                ButterknifeConfigMode.bindView(mController.view, fragmentView);
+                initView();
+                if (isConfigToolbar()) {
+                    ActivityConfigMode.configToolbar(fragmentView, mController.getActivity());
+                }
                 mController.initData();
             }
         });
@@ -168,6 +157,5 @@ public abstract class BaseFragmentView<T extends BaseFragmentController> {
     public boolean isConfigToolbar() {
         return true;
     }
-
 
 }

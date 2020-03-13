@@ -16,6 +16,7 @@ import com.trello.rxlifecycle3.LifecycleTransformer;
 import com.trello.rxlifecycle3.RxLifecycle;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 import com.trello.rxlifecycle3.android.RxLifecycleAndroid;
+import com.yzk.lightweightmvc.config.ActivityConfigMode;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -94,10 +95,6 @@ public abstract class BaseController<P extends BaseView> extends FragmentActivit
         }
     }
 
-    protected boolean useTranslucent() {
-        return true;
-    }
-
     private void initView(View layout) {
         setContentView(layout);
         this.view.setView(this);
@@ -125,7 +122,11 @@ public abstract class BaseController<P extends BaseView> extends FragmentActivit
     private void initView(int i) {
         setContentView(i);
         view.setView(this);
-        delayInit(findViewById(android.R.id.content));
+        View viewById = findViewById(android.R.id.content);
+        if (view.isConfigToolbar()) {
+            ActivityConfigMode.configToolbar(viewById, this);
+        }
+        delayInit(viewById);
     }
 
     @CallSuper
@@ -169,8 +170,10 @@ public abstract class BaseController<P extends BaseView> extends FragmentActivit
         }
     }
 
-
     public boolean isResume() {
         return isResume;
     }
+
+
+
 }

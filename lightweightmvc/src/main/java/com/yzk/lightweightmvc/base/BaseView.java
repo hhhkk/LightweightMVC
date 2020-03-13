@@ -6,14 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.yzk.lightweightmvc.config.ButterknifeConfigMode;
 import com.yzk.lightweightmvc.config.LoadingConfigMode;
 import com.yzk.lightweightmvc.utils.MessageUtils;
+import com.yzk.lightweightmvc.utils.QMUIStatusBarHelper;
 
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -33,13 +33,31 @@ public abstract class BaseView<T extends BaseController> {
 
     private View rootView;
 
-    private Unbinder bind;
+
+    /***
+     * 重写此方法决定是不是执行默认toolbar设置
+     * @return true 执行,false 不执行,默认return true
+     */
+    public boolean isConfigToolbar() {
+        return true;
+    }
 
     public void setView(T activity) {
         mController = activity;
         activity.setRequestedOrientation(setRequestedOrientation());
+        if (useTranslucent()) {
+            QMUIStatusBarHelper.translucent(activity); //沉浸式状态栏
+        }
         rootView = activity.findViewById(android.R.id.content);
-        bind = ButterKnife.bind(this, rootView);
+        ButterknifeConfigMode.bindView(this, rootView);
+    }
+
+    /**
+     * 是否启用状态栏沉浸,默认开启
+     */
+    private boolean useTranslucent() {
+
+        return true;
     }
 
     /**
@@ -56,6 +74,10 @@ public abstract class BaseView<T extends BaseController> {
 
     public void showLoading(String message) {
         LoadingConfigMode.showLoading(message, mController);
+    }
+
+    public void showLoading() {
+        LoadingConfigMode.showLoading("加载中,请稍候~", mController);
     }
 
     Disposable closeTimer;
@@ -136,9 +158,7 @@ public abstract class BaseView<T extends BaseController> {
     }
 
     public void onDestroy() {
-        if (bind != null) {
-            bind.unbind();
-        }
+        ButterknifeConfigMode.unbindView(this);
         LoadingConfigMode.releaseCreateDialog(mController);
     }
 
@@ -168,12 +188,11 @@ public abstract class BaseView<T extends BaseController> {
         if (o == null || getClass() != o.getClass()) return false;
         BaseView<?> baseView = (BaseView<?>) o;
         return Objects.equals(mController, baseView.mController) &&
-                Objects.equals(rootView, baseView.rootView) &&
-                Objects.equals(bind, baseView.bind);
+                Objects.equals(rootView, baseView.rootView);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(mController, rootView, bind);
+        return Objects.hash(mController, rootView);
     }
 }

@@ -5,18 +5,22 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.CallSuper;
 import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import com.trello.rxlifecycle3.LifecycleProvider;
 import com.trello.rxlifecycle3.LifecycleTransformer;
 import com.trello.rxlifecycle3.RxLifecycle;
 import com.trello.rxlifecycle3.android.FragmentEvent;
 import com.trello.rxlifecycle3.android.RxLifecycleAndroid;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+
 import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
 
@@ -28,10 +32,10 @@ public abstract class BaseFragmentController<P extends BaseFragmentView> extends
 
     /**
      * 摒弃此类写法,因为有了更好或者说,更合理的解决方案
+     *
      * @param activity
      */
 //    protected Context mContext;
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -49,9 +53,9 @@ public abstract class BaseFragmentController<P extends BaseFragmentView> extends
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        if (this.view!=null){
-            return view.onCreateView(inflater,container,savedInstanceState);
-        }else{
+        if (this.view != null) {
+            return view.onCreateView(inflater, container, savedInstanceState, this);
+        } else {
             try {
                 this.view = getMvcView();
             } catch (java.lang.InstantiationException e) {
@@ -59,9 +63,9 @@ public abstract class BaseFragmentController<P extends BaseFragmentView> extends
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-            if (this.view!=null){
-                return view.onCreateView(inflater,container,savedInstanceState);
-            }else{
+            if (this.view != null) {
+                return view.onCreateView(inflater, container, savedInstanceState, this);
+            } else {
                 return null;
             }
         }
