@@ -3,8 +3,8 @@ package com.yzk.lightweightmvc.utils;
 import android.app.Activity;
 import android.widget.Toast;
 import com.tapadoo.alerter.Alerter;
-import com.yzk.lightweightmvc.base.BaseApp;
-
+import com.yzk.lightweightmvc.base.SuperApp;
+import com.yzk.lightweightmvc.config.MessageConfigMode;
 import java.util.List;
 
 /***
@@ -15,10 +15,15 @@ import java.util.List;
 public class MessageUtils {
 
     public static void showMessage(String title, String message, int bgColor) {
-        List<Activity> activities = BaseApp.getActivities();
+        List<Activity> activities = SuperApp.getActivities();
         for (int i = activities.size() - 1; i >= 0; i--) {
             Activity baseController = activities.get(i);
             if (!baseController.isFinishing()) {
+                Alerter messageDialog = MessageConfigMode.createMessageDialog(baseController, title, message, bgColor);
+                if (messageDialog != null) {
+                    messageDialog.show();
+                    return;
+                }
                 Alerter.create(baseController)
                         .setBackgroundColor(bgColor)
                         .setTitle(title)
@@ -30,8 +35,8 @@ public class MessageUtils {
     }
 
     public static void showToastShort(String message) {
-        List<Activity> activities = BaseApp.getActivities();
-        for (int i = activities.size()-1; i >= 0; i--) {
+        List<Activity> activities = SuperApp.getActivities();
+        for (int i = activities.size() - 1; i >= 0; i--) {
             Activity baseController = activities.get(i);
             if (!baseController.isFinishing()) {
                 Toast.makeText(baseController, message, Toast.LENGTH_SHORT).show();
@@ -41,8 +46,8 @@ public class MessageUtils {
     }
 
     public static void showToastLong(String message) {
-        List<Activity> activities = BaseApp.getActivities();
-        for (int i = activities.size()-1; i >= 0; i--) {
+        List<Activity> activities = SuperApp.getActivities();
+        for (int i = activities.size() - 1; i >= 0; i--) {
             Activity baseController = activities.get(i);
             if (!baseController.isFinishing()) {
                 Toast.makeText(baseController, message, Toast.LENGTH_LONG).show();
@@ -53,15 +58,19 @@ public class MessageUtils {
 
 
     public static void showMessage(String message) {
-        showMessage("温馨提示", message, android.R.color.darker_gray);
+        int color = MessageConfigMode.setTipsMessageColor(SuperApp.getAppContext());
+        showMessage("温馨提示", message, color != 0 ? color : android.R.color.darker_gray);
     }
 
     public static void showErrorMessage(String message) {
-        showMessage("温馨提示", message, android.R.color.holo_red_light);
+        int color = MessageConfigMode.setErrorMessageColor(SuperApp.getAppContext());
+        showMessage("温馨提示", message, color != 0 ? color : android.R.color.holo_red_light);
     }
 
     public static void showWarningMessage(String message) {
-        showMessage("温馨提示", message, android.R.color.holo_orange_light);
+        int color = MessageConfigMode.setWarningMessageColor(SuperApp.getAppContext());
+        showMessage("温馨提示", message, color != 0 ? color : android.R.color.holo_orange_light);
     }
+
 
 }

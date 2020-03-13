@@ -6,12 +6,12 @@ import android.view.View;
 /**
  * 配置项目通用Activity 标题栏返回按钮
  */
-public class ToolbarConfigMode {
+public class ActivityConfigMode {
 
     private static DefaultToolBarSetting defaultToolBarSetting;
 
     public static void setDefaultToolBarSetting(DefaultToolBarSetting defaultToolBarSetting) {
-        ToolbarConfigMode.defaultToolBarSetting = defaultToolBarSetting;
+        ActivityConfigMode.defaultToolBarSetting = defaultToolBarSetting;
     }
 
     public static void configToolbar(View fragmentView) {
@@ -23,6 +23,8 @@ public class ToolbarConfigMode {
     public interface DefaultToolBarSetting {
         void configToolbar(View view);
     }
+
+
 
 
 }

@@ -1,7 +1,6 @@
 package com.yzk.lightweightmvc.base;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -14,9 +13,12 @@ import java.util.List;
 import io.reactivex.plugins.RxJavaPlugins;
 import timber.log.Timber;
 
-public class BaseApp extends Application implements Application.ActivityLifecycleCallbacks {
+
+public class SuperApp implements Application.ActivityLifecycleCallbacks {
 
     private static Application application;
+
+    private static SuperApp superApp = new SuperApp();
 
     public static Context getAppContext() {
         return application;
@@ -30,16 +32,12 @@ public class BaseApp extends Application implements Application.ActivityLifecycl
         return isDebug(application);
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        application = this;
-        if (!isMainProcess()) {
-            return;
-        }
+    public static SuperApp onCreate(Application application) {
+        SuperApp.application = application;
         initLog();
-        registerActivityLifecycleCallbacks(this);
+        application.registerActivityLifecycleCallbacks(superApp);
         RxJavaPlugins.setErrorHandler(throwable -> throwable.printStackTrace());
+        return superApp;
     }
 
     public static void KillMe() {
@@ -51,20 +49,7 @@ public class BaseApp extends Application implements Application.ActivityLifecycl
     }
 
 
-    public boolean isMainProcess() {
-        int pid = android.os.Process.myPid();
-        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = activityManager.getRunningAppProcesses();
-        for (ActivityManager.RunningAppProcessInfo appProcess : runningAppProcesses) {
-            Timber.e("appProcess " + appProcess.processName);
-            if (appProcess.pid == pid) {
-                return getApplicationInfo().packageName.equals(appProcess.processName);
-            }
-        }
-        return false;
-    }
-
-    private void initLog() {
+    private static void initLog() {
         Timber.plant(new Timber.DebugTree() {
             @Override
             protected void log(int priority, String tag, String message, Throwable t) {

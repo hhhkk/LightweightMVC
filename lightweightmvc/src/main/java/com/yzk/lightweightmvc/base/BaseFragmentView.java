@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 
 import com.yzk.lightweightmvc.config.LoadingConfigMode;
 import com.yzk.lightweightmvc.utils.MessageUtils;
-import com.yzk.lightweightmvc.config.ToolbarConfigMode;
+import com.yzk.lightweightmvc.config.ActivityConfigMode;
 
 import java.util.concurrent.TimeUnit;
 import butterknife.ButterKnife;
@@ -137,7 +137,7 @@ public abstract class BaseFragmentView<T extends BaseFragmentController> {
         if (fragmentView == null) {
             fragmentView = this.setContentLayout(inflater, container);
             if (isConfigToolbar()) {
-                ToolbarConfigMode.configToolbar(fragmentView);
+                ActivityConfigMode.configToolbar(fragmentView);
             }
             setFragmentView(mController, mContext, fragmentView);
             mController.initData();

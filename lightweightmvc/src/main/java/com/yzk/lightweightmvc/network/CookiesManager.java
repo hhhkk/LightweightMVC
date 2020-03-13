@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.util.ArrayMap;
 
 import com.alibaba.fastjson.JSON;
-import com.yzk.lightweightmvc.base.BaseApp;
+import com.yzk.lightweightmvc.base.SuperApp;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class CookiesManager implements CookieJar {
 
 
     public CookiesManager() {
-        ck = BaseApp.getAppContext().getSharedPreferences("cookies", Context.MODE_PRIVATE);
+        ck = SuperApp.getAppContext().getSharedPreferences("cookies", Context.MODE_PRIVATE);
         Map<String, ?> all = ck.getAll();
         Set<String> strings = all.keySet();
         for (String temp : strings) {
