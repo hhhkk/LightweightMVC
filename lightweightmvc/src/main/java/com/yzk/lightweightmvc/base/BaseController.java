@@ -1,26 +1,29 @@
 package com.yzk.lightweightmvc.base;
 
+import android.annotation.SuppressLint;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
+
 import androidx.annotation.CallSuper;
 import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
+
 import com.trello.rxlifecycle3.LifecycleProvider;
 import com.trello.rxlifecycle3.LifecycleTransformer;
 import com.trello.rxlifecycle3.RxLifecycle;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 import com.trello.rxlifecycle3.android.RxLifecycleAndroid;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+
 import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
 
 public abstract class BaseController<P extends BaseView> extends FragmentActivity implements LifecycleProvider<ActivityEvent> {
-
-    // 绑定界面生命周期
-    // bindToLifecycle();
 
     protected P view;
 
@@ -64,6 +67,7 @@ public abstract class BaseController<P extends BaseView> extends FragmentActivit
         return RxLifecycleAndroid.bindActivity(this.lifecycleSubject);
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @CallSuper
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +81,6 @@ public abstract class BaseController<P extends BaseView> extends FragmentActivit
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         if (view != null) {
             int i = view.setContentLayout();
             if (i != 0) {

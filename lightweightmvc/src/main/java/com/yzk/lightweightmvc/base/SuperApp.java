@@ -40,7 +40,6 @@ public class SuperApp implements Application.ActivityLifecycleCallbacks {
         return superApp;
     }
 
-
     private static void initLog() {
         Timber.plant(new Timber.DebugTree() {
             @Override

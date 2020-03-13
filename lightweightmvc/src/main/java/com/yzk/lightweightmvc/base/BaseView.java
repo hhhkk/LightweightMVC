@@ -1,6 +1,7 @@
 package com.yzk.lightweightmvc.base;
 
 import android.app.Dialog;
+import android.content.pm.ActivityInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -10,6 +11,7 @@ import com.yzk.lightweightmvc.utils.MessageUtils;
 
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
@@ -35,9 +37,20 @@ public abstract class BaseView<T extends BaseController> {
 
     public void setView(T activity) {
         mController = activity;
+        activity.setRequestedOrientation(setRequestedOrientation());
         rootView = activity.findViewById(android.R.id.content);
         bind = ButterKnife.bind(this, rootView);
     }
+
+    /**
+     * 默认强制竖屏,如需改变屏幕方向,请重写此方法,并返回对应的屏幕方向
+     *
+     * @return
+     */
+    public int setRequestedOrientation() {
+        return ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+    }
+
 
     public abstract int setContentLayout();
 
