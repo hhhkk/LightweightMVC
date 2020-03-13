@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+
 import androidx.annotation.Nullable;
 
 import com.yzk.lightweightmvc.config.LoadingConfigMode;
@@ -13,6 +15,7 @@ import com.yzk.lightweightmvc.utils.MessageUtils;
 import com.yzk.lightweightmvc.config.ActivityConfigMode;
 
 import java.util.concurrent.TimeUnit;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
@@ -139,13 +142,23 @@ public abstract class BaseFragmentView<T extends BaseFragmentController> {
             if (isConfigToolbar()) {
                 ActivityConfigMode.configToolbar(fragmentView);
             }
-            setFragmentView(mController, mContext, fragmentView);
-            mController.initData();
+            delayInit();
             return fragmentView;
         } else {
             container.removeView(fragmentView);
             return fragmentView;
         }
+    }
+
+    private void delayInit() {
+        fragmentView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                fragmentView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                setFragmentView(mController, mContext, fragmentView);
+                mController.initData();
+            }
+        });
     }
 
     /***

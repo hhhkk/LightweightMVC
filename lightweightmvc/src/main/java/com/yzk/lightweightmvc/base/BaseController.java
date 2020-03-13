@@ -1,9 +1,9 @@
 package com.yzk.lightweightmvc.base;
 
 import android.annotation.SuppressLint;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewTreeObserver;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.CheckResult;
@@ -92,23 +92,40 @@ public abstract class BaseController<P extends BaseView> extends FragmentActivit
                 }
             }
         }
-        initData();
     }
 
     protected boolean useTranslucent() {
         return true;
     }
 
-    private void initView(View view) {
-        setContentView(view);
+    private void initView(View layout) {
+        setContentView(layout);
         this.view.setView(this);
-        this.view.onCreated();
+        delayInit(layout);
+    }
+
+    /***
+     * 延迟初始化方案,目的在于让Activity 优先初始化布局,
+     * 待布局初始化完毕后,进行其他UI赋值,数据获取操作,
+     * 可以有效提升Activity初始化速度,
+     * 已经在1个以上开源库中看到过类似写法.
+     * @param layout
+     */
+    private void delayInit(View layout) {
+        layout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                layout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                view.onCreated();
+                initData();
+            }
+        });
     }
 
     private void initView(int i) {
         setContentView(i);
         view.setView(this);
-        view.onCreated();
+        delayInit(findViewById(android.R.id.content));
     }
 
     @CallSuper
