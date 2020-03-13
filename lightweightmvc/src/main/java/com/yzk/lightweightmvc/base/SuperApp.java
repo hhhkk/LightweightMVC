@@ -40,14 +40,6 @@ public class SuperApp implements Application.ActivityLifecycleCallbacks {
         return superApp;
     }
 
-    public static void KillMe() {
-        List<Activity> activities = getActivities();
-        for (Activity temp : activities) {
-            temp.finish();
-        }
-        System.exit(0);
-    }
-
 
     private static void initLog() {
         Timber.plant(new Timber.DebugTree() {

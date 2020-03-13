@@ -1,10 +1,10 @@
 package com.yzk.lightweightmvc.utils;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
-
+import com.yzk.lightweightmvc.base.SuperApp;
 import java.util.List;
-
 import timber.log.Timber;
 
 public class ProcessUtils {
@@ -20,5 +20,15 @@ public class ProcessUtils {
             }
         }
         return false;
+    }
+
+
+    public static void KillMe() {
+        List<Activity> activities = SuperApp.getActivities();
+        for (Activity temp : activities) {
+            temp.finish();
+        }
+        activities.clear();
+        System.exit(0);
     }
 }
