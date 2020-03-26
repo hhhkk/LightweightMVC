@@ -1,8 +1,15 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Example testInfo template template
+### Example testInfo template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen### Android template
 # Built application files
 *.apk
-*.aar
 *.ap_
-*.aab
 
 # Files for the ART/Dalvik VM
 *.dex
@@ -14,8 +21,6 @@
 bin/
 gen/
 out/
-#  Uncomment the following line in case you need and you don't have the release build type files in your app
-# release/
 
 # Gradle files
 .gradle/
@@ -44,23 +49,17 @@ captures/
 .idea/assetWizardSettings.xml
 .idea/dictionaries
 .idea/libraries
-# Android Studio 3 in .gitignore file.
 .idea/caches
-.idea/modules.xml
-# Comment next line if keeping position of elements in Navigation Editor is relevant for you
-.idea/navEditor.xml
 
 # Keystore files
-# Uncomment the following lines if you do not want to check your keystore files in.
+# Uncomment the following line if you do not want to check your keystore files in.
 #*.jks
-#*.keystore
 
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild
-.cxx/
 
 # Google Services (e.g. APIs or Firebase)
-# google-services.json
+google-services.json
 
 # Freeline
 freeline.py
@@ -73,13 +72,33 @@ fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
+### macOS template
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
 
-# Version control
-vcs.xml
+# Icon must end with two r
+Icon
 
-# lint
-lint/intermediates/
-lint/generated/
-lint/outputs/
-lint/tmp/
-# lint/reports/
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+
+app/mapping.txt

@@ -1,29 +1,52 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply plugin: 'com.android.library'
 
-buildscript {
-    
-    repositories {
-        google()
-        jcenter()
-        
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.1'
-        
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
     }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
+
 }
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-        
-    }
-}
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api 'androidx.appcompat:appcompat:1.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    api 'com.jakewharton.timber:timber:4.7.1'
+    api 'com.tapadoo.android:alerter:1.0.6'
+    api 'me.jessyan:autosize:1.2.0'
+    api 'com.trello.rxlifecycle3:rxlifecycle:3.1.0'
+    api 'com.trello.rxlifecycle3:rxlifecycle-android:3.1.0'
+    api 'com.trello.rxlifecycle3:rxlifecycle-components:3.1.0'
+    api 'com.trello.rxlifecycle3:rxlifecycle-components-preference:3.1.0'
+    api 'com.trello.rxlifecycle3:rxlifecycle-android-lifecycle:3.1.0'
+    api 'com.squareup.okhttp3:okhttp:4.2.1'
+    api 'com.squareup.retrofit2:retrofit:2.6.1'
+    api 'com.squareup.retrofit2:adapter-rxjava2:2.6.1'
+    api 'io.reactivex.rxjava2:rxjava:2.2.13'
+    api 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    api 'com.alibaba:fastjson:1.1.54.android'
+    api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50'
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }
